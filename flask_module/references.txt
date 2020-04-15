@@ -1,0 +1,5 @@
+1. Flask tutorial in VS Code(Blog): https://code.visualstudio.com/docs/python/tutorial-flask
+Note:
+ If you open a separate command prompt or terminal, activate the environment by running source env/bin/activate (Linux/macOS)
+
+2. Youtube Flask tutorial to create a webapp : https://www.youtube.com/watch?v=zRwy8gtgJ1A&list=PLillGF-RfqbbbPz6GSEM9hLQObuQjNoj_&index=1
