@@ -7,12 +7,26 @@ from app import app
 # Function to render the templates
 from flask import render_template
 
+# Import to use redirect and url_for methods
+from flask import url_for, redirect
+
 # Map 2 Routes to the same Function. Can map a single route too.
 
 @app.route('/')
 @app.route('/index')
 def index():
-	return "Welcome to AcadOverflow!"
+	user = {'name': 'guest'}
+	posts = [
+		{
+			'author': {'name': 'user1'},
+			'question': 'The question 1 in detail.' 
+		},
+		{
+			'author': {'name': 'user2'},
+			'question': 'The question 2 in detail.' 
+		}
+	]
+	return render_template('index.html',title='Home',user=user,posts=posts)
 
 @app.route('/login/<name>')
 def hello_name(name):
@@ -22,5 +36,4 @@ def hello_name(name):
 def show_blog(questionID):
 	return "Question Number: %d" % questionID
 
-# Simple returns a string to the client :-)
- 
+# Simple returns a string to the client 
