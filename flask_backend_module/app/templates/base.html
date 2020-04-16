@@ -14,13 +14,12 @@
   </head>
 
   <body>
+  {% include 'includes/_navbar.html' %}
 	<link href="{{ url_for('static',filename = 'styles.css') }}" rel="stylesheet" type="text/css">
-    <div><a href="/index">Home</a></div>
-    <hr>
-    {% block content %}{% endblock %}
+  <hr>
+  {% block content %}{% endblock %}
   </body>
 </html>
 
 <!-- block control statement is used to define the place where the derived templates can insert themselves
-Blocks are given a unique name and content can enhanced/replaced in derived templates
- -->
+Blocks are given a unique name and content can enhanced/replaced in derived templates-->
