@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Hi, {{ user.name }}! Welcome to AcadOverflow :)</h1>
+    <h2> Want to ask or post something? Write your query in the box!</h2>
+    <form action="/QueryNext" method="post" id="form1">
+        <p> Question: <input type="text" name="question" id="question"> </p>
+        <p> <input type="submit" name= "bsubmit" value="Search"> </p>
+    </form>
     {% for post in posts %}
     <div><p>{{ post.author.name }} says: <b>{{ post.question }}</b></p></div>
     {% endfor %}

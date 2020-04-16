@@ -10,6 +10,9 @@ from flask import render_template
 # Import to use redirect and url_for methods
 from flask import url_for, redirect
 
+# Import Request object to use
+from flask import request
+
 # Map 2 Routes to the same Function. Can map a single route too.
 
 @app.route('/')
@@ -32,8 +35,51 @@ def index():
 def hello_name(name):
 	return "Hello, %s!" % name
 
+@app.route('/about')
+def about():
+	return render_template('about.html')
+
 @app.route('/question/<int:questionID>')
-def show_blog(questionID):
+def show_question(questionID):
 	return "Question Number: %d" % questionID
 
-# Simple returns a string to the client 
+@app.route('/admin')
+def hello_admin():
+	return "Hello Admin!"
+
+@app.route('/ask')
+def ask():
+	return render_template('ask.html')
+
+@app.route('/QueryNext',methods=['GET','POST'])
+def QueryNext():
+	# To find out the method of request, use 'request.method'
+	if request.method == "GET":
+		print(request.args)
+		question = request.args.get("question")
+	return "Query Successful!"
+				
+	# elif request.method == "POST":
+	# 	userID = request.form['userid']
+	# 	password = request.form['loginpassword']
+	# 	# Can perform some password validation here!
+	# 	return "Login Successful for: %s" % userID
+	# Simple returns a string to the client
+
+@app.route('/AddNext',methods=['GET','POST'])
+def AddNext():
+	# To find out the method of request, use 'request.method'
+	if request.method == "GET":
+		print(request.args)
+		question = request.args.get("question")
+		title = request.args.get("title")
+		print(question)
+		print(title)
+	return "Question added Successfully!"
+				
+	# elif request.method == "POST":
+	# 	userID = request.form['userid']
+	# 	password = request.form['loginpassword']
+	# 	# Can perform some password validation here!
+	# 	return "Login Successful for: %s" % userID
+	# Simple returns a string to the client 
