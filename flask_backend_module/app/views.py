@@ -16,8 +16,15 @@ from flask import request
 
 @app.route('/')
 @app.route('/login')
-def dashboard():
-    return render_template('dashboard.html')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def sigup():
+    return render_template('signup.html')
+
+
+# ***************************************************************************
 
 # @app.route('/home')
 	# user = {'name': 'guest'}
