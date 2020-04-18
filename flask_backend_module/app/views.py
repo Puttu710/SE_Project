@@ -23,6 +23,16 @@ def login():
 def sigup():
     return render_template('signup.html')
 
+@app.route('/login_validation',methods=['GET','POST'])
+def login_validation():
+	if request.method == "POST":
+		userID = request.form['userid']
+		password = request.form['loginpassword']
+		# Can perform some password validation here!
+		# return "Login Successful for: %s" % userID
+	return render_template('home.html')
+
+
 
 # ***************************************************************************
 
