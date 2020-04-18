@@ -13,15 +13,14 @@
     <!-- Bootstrap prerequisites -->
     <!------------------- Login UI prerequisites -------------------->
 
-    <!-- <script src="jquery.js"></script> -->
+    <script src="jquery.js"></script>
 
     <!-- Required meta tags -->
-    <!-- <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="static/dashboard.css" rel="stylesheet" type="text/css" />
     <link href="static/login.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=Play" ref="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Play" ref="stylesheet">
 
     <!------------------- Login UI prerequisites -------------------->
     
@@ -30,7 +29,7 @@
 
   <body>
   {% include 'includes/_navbar.html' %}
-	<link href="{{ url_for('static',filename = 'styles.css') }}" rel="stylesheet" type="text/css">
+	<!-- <link href="{{ url_for('static',filename = 'styles.css') }}" rel="stylesheet" type="text/css"> -->
   <hr>
   {% block content %}{% endblock %}
   </body>

@@ -15,20 +15,23 @@ from flask import request
 
 
 @app.route('/')
-@app.route('/index')
-def index():
-	user = {'name': 'guest'}
-	posts = [
-		{
-			'author': {'name': 'user1'},
-			'question': 'The question 1 in detail.' 
-		},
-		{
-			'author': {'name': 'user2'},
-			'question': 'The question 2 in detail.' 
-		}
-	]
-	return render_template('index.html',title='Home',user=user,posts=posts)
+@app.route('/login')
+def dashboard():
+    return render_template('dashboard.html')
+
+# @app.route('/home')
+	# user = {'name': 'guest'}
+	# posts = [
+	# 	{
+	# 		'author': {'name': 'user1'},
+	# 		'question': 'The question 1 in detail.' 
+	# 	},
+	# 	{
+	# 		'author': {'name': 'user2'},
+	# 		'question': 'The question 2 in detail.' 
+	# 	}
+	# ]
+	# return render_template('index.html',title='Home',user=user,posts=posts)
 
 @app.route('/login/<name>')
 def hello_name(name):
