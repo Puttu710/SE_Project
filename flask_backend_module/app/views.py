@@ -13,7 +13,6 @@ from flask import url_for, redirect
 # Import Request object to use
 from flask import request
 
-# Map 2 Routes to the same Function. Can map a single route too.
 
 @app.route('/')
 @app.route('/index')
