@@ -10,10 +10,10 @@ EN = spacy.load('en_core_web_sm')
 import logging
 logging.getLogger('tensorflow').disabled = True
 
-data = pd.read_csv('Preprocessed_data.csv')
+data = pd.read_csv('models/Preprocessed_data.csv')
 
 import fasttext
-fasttext_model = fasttext.load_model('embeddings.bin')
+fasttext_model = fasttext.load_model('models/embeddings.bin')
 
 #Calculate Sentence Embeddings
 def question_to_vec(question, embeddings, dim=100):
