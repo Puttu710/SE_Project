@@ -62,11 +62,11 @@ def tokenize_code(text):
 def preprocess_text(text):
     return ' '.join(normalize(tokenize_text(text)))
 
-data = pd.read_csv('Preprocessed_data.csv')
-all_title_embeddings = pd.read_csv('title_embeddings.csv').values
+data = pd.read_csv('models/Preprocessed_data.csv')
+all_title_embeddings = pd.read_csv('models/title_embeddings.csv').values
 #print(all_title_embeddings)
 # Import saved Wordvec Embeddings
-w2v_model = gensim.models.word2vec.Word2Vec.load('SO_word2vec_embeddings.bin')
+w2v_model = gensim.models.word2vec.Word2Vec.load('models/SO_word2vec_embeddings.bin')
 
 def question_to_vec(question, embeddings, dim=300):
     question_embedding = np.zeros(dim)
