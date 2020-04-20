@@ -1,0 +1,30 @@
+ <!-- Sidenav starts -->
+ {% if session.logged_in %}
+ <ul id="slide-out" class="sidenav">
+     <li>
+         <div class="user-view">
+             <div class="background">
+                 <img src="{{ url_for('static', filename = 'abstract-blue-background_1048-1511.jpg') }}">
+             </div>
+             <a href="#user"><img class="circle" src="{{ url_for('static', filename = session.profile_img) }}"></a>
+             <span class="white-text name">{{session.name}}</span>
+             <marquee><span class="white-text email">{{session.emailid}}</span></marquee>
+             {% if session.category == "Student" %}
+                <span class="white-text rollnum">{{session.rollno}}</span>
+             {% endif %}
+         </div>
+     </li>
+     <li><div class="divider"></div></li>
+     <li><a class="modal-trigger" href="#modal1"><i class="material-icons">collections_bookmark</i>My Posted Questions</a></li>
+     {% for r in my_research_fields %}
+        <li><a class="subheader">{{ r }}</a></li>
+     {% endfor %}
+     <li><div class="divider"></div></li>
+     <li><a href="https://www.ieee.org/" target="_blank">My Answered Questions</a></li>
+     <li><a href="http://india.acm.org/" target="_blank">My Posted Answered Questions</a></li>
+     <li><a href="http://india.acm.org/" target="_blank">My Posted Unanswered Questions</a></li>
+     <li><div class="divider"></div></li>
+     <li><a class="waves-effect" href="{{ url_for('logout') }}">Logout</a></li>
+ </ul>
+{% endif %}
+<!-- Sidenav ends -->
