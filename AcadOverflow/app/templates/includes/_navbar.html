@@ -1,0 +1,44 @@
+<div class="navbar-fixed">
+        <nav class="nav-extended blue darken-1">
+          <div class="nav-wrapper">
+              {% if session.logged_in %}
+              <a id="logo" href="{{ url_for('home') }}" class="brand-logo center">Acad Overflow</a>
+              <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+    
+              <ul>
+                  <!-- {% if session.logged_in %} -->
+                  <li><a href="{{ url_for('home') }}"><i class="material-icons">home</i></a></li>
+                  <li><a href="{{ url_for('ask_question') }}">Ask a Question</a></li>
+                  <li><a href="{{ url_for('home') }}">Popular Questions</a></li>
+                  <!-- {% endif %} -->
+              </ul>
+              {% else %}
+                <a id="logo" href="{{ url_for('index') }}" class="brand-logo center">Acad Overflow</a>
+          {% endif %}
+    
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if session.logged_in %}
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        <div class="chip">
+                    <img src="{{ url_for('static', filename = session.profile_img) }}" alt="" class="circle responsive-img">{{session.fname}}
+                        </div>
+                    </a>
+                </li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+            </ul>
+          </div>
+        </nav>
+        <ul class="sidenav" id="mobile-demo">
+          <li><a href="sass.html">Sass</a></li>
+          <li><a href="badges.html">Components</a></li>
+          <li><a href="collapsible.html">JavaScript</a></li>
+        </ul>
+      </div>
+      <br>
+      <br>
+      <br>
