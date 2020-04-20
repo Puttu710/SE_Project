@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<main>
+<div style="text-align: center; padding: 2%; height:5%; font-family: Calibri;color: #607d8b">
+  <div class="section">
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <form method="POST" action="">
+              <div class="blue-grey-text center row">
+                <h1>Register</h1>
+              </div>
+              <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input name="emailId" type="text" class="validate" value={{request.form.emailId}}>
+                    <label class="active" for="emailid">Email ID</label>
+                  </div>
+                  <div class="col s3"></div>
+              </div>
+              <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input name="fname" type="text"  value={{request.form.fname}}>
+                    <label for="fname">First Name</label>
+                  </div>
+                  <div class="col s3"></div>
+              </div>
+              <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input name="lname" type="text"  value={{request.form.lname}}>
+                    <label for="lname">Last Name</label>
+                  </div>
+                  <div class="col s3"></div>
+              </div>
+              <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">live_help</i>
+                    <input name="password" type="password" class="validate" value={{request.form.password}}>
+                    <label for="password">Password</label>
+                  </div>
+                  <div class="col s3"></div>
+              </div>
+              <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">live_help</i>
+                    <input name="confirm_password" type="password" class="validate" value={{request.form.confirm_password}}>
+                    <label for="confirm_password">Confirm Password</label>
+                  </div>
+                  <div class="col s3"></div>
+              </div>
+              <div class="row">
+                <div class="col s3"></div>
+                <div class="col s6">
+                  <button class="btn blue darken-1 waves-effect waves-light" type="submit" name="action">Submit
+                    <i class="material-icons right">send</i>
+                  </button>
+                </div>
+                <div class="col s3"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+{% endblock %}

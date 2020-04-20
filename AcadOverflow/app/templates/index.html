@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IIITH Research</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'styles.css') }}" type="text/css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- IIITH Banayan Tree favicon -->
+    <link rel="icon" href="{{ url_for('static',filename = 'favicon.ico') }}" type="image/x-icon" />
+    <link href="Content/cleditor/jquery.cleditor.css" rel="stylesheet" type="text/css" />
+    <link href="Content/Site.css" rel="stylesheet" type="text/css" />
+ 
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{{ url_for('static', filename = 'myscript.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('ul.tabs').tabs({
+                swipeable : true,
+                responsiveThreshold : 1920
+            });
+            $('.collapsible').collapsible();
+            $('.datepicker').datepicker();
+            $('.carousel').css("height","85%");
+        });
+        
+        var options = {
+            width: 400,
+            height: 200,
+            controls: "bold italic underline strikethrough subscript superscript | font size " + "style | color highlight removeformat | bullets numbering | outdent " + "indent | alignleft center alignright justify | undo redo | " + "rule link image unlink | cut copy paste pastetext | print source" };
+ 
+        var editor = $("#editor").cleditor(options)[0];
+ 
+        $("#btnClear").click(function (e) {
+            e.preventDefault();
+            editor.focus();
+            editor.clear();
+        });
+ 
+        $("#btnAddImage").click(function () {
+            editor.execCommand("insertimage",
+                "http://images.free-extras.com/pics/s/smile-1620.JPG", null, null);
+            editor.focus();
+        });
+ 
+        $("#btnGetHtml").click(function () {
+            alert($("#editor").val());
+        });
+    </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+        <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+        <script type="text/javascript">
+            CKEDITOR.replace('editor')
+        </script>
+    
+</head>
+<body>
+    {% include 'includes/_sidenav.html' %}
+    {% include 'includes/_navbar.html' %}
+    <!-- <div class="carousel">
+        <a class="carousel-item" href="#one!"><img src="static/index_images/1.jpg"></a>
+        <a class="carousel-item" href="#two!"><img src="static/index_images/2.jpg"></a>
+        <a class="carousel-item" href="#three!"><img src="static/index_images/3.png"></a>
+        <a class="carousel-item" href="#four!"><img src="static/profile_images/Hitesh.jpg"></a>
+        <a class="carousel-item" href="#five!"><img src="https://lorempixel.com/250/250/nature/5"></a>
+    </div> -->
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+            </ol>
+        
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="static/index_images/1.jpg" alt="" style="width: 100%;">
+                </div>
+        
+                <div class="item">
+                    <img src="static/index_images/2.jpg" alt="" style="width:100%;">
+                </div>
+            
+                <div class="item">
+                    <img src="static/index_images/3.jpg" alt="" style="width:100%;">
+                </div>
+    
+                <div class="item">
+                    <img src="static/index_images/4.jpg" alt="" style="width:100%;">
+                </div>
+            </div>
+        
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    
+        <!-- <div class="navbar-fixed" style="position: fixed;">
+            <ul id="tabs-swipe-demo" class="tabs tabs-fixed-width tab-demo z-depth-5" style="position: fixed;"> 
+                <li class="tab col s3"><a class="active" href="#publications"><b>Publications</b></a></li>
+                <li class="tab col s3"><a href="#labs"><b>Labs</b></a></li>
+            </ul>    
+        </div>
+        <br><br><br>
+                    
+        <div id="publications" class="col s12" style="overflow: auto; padding: 0%;">
+            <ul class="collapsible popout">
+                {% for i in papers %}
+                <li>
+                    <div class="collapsible-header"><i class="material-icons more">arrow_right</i><b>{{i.title|safe}}</b><span class="new badge" data-badge-caption="">{{i.likes|safe}} Likes</span></div>
+                    <div class="collapsible-body" align="justify">
+                        Authors:  
+                        {% for j in authors %}
+                            <span>
+                                {% if i.id==j.id %}
+                                            {{j.authors|safe}}
+                                {% endif %}
+                            </span>
+                        {% endfor %}
+                        <br>
+                        Conference: {{i.conference|safe}}<br>
+                        Date: {{i.date_published|safe}}<br>
+                        Report No: {{i.report_no|safe}}<br>
+                        Abstract: {{i.abstract|safe}}<br>
+                        Full paper: <a href="{{i.pdf}}" download>pdf</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <br>
+        </div>
+        <div id="labs" class="col s12 " style="overflow: auto; padding: 0%;">
+            <div class="collection">
+                {% for lab in labs %}
+                    <a href="{{url_for('login')}}" class="collection-item z-depth-5"><h6><span class="new badge" id='followers_{{lab.id}}' data-badge-caption="">{{lab.num_followers}} Followers</span><b>{{lab.name}}</b></h6></a>
+                {% endfor %}
+                {% for i in num_lab %}
+                    <script type="text/javascript">
+                        set_following('{{ i.followed_labid }}','{{ i.num }}');
+                    </script>
+                {% endfor %}
+            </div>
+        </div> -->
+</body>
+</html>
+    

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IIITH Research</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'styles.css') }}" type="text/css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- IIITH Banayan Tree favicon -->
+    <link rel="icon" href="{{ url_for('static',filename = 'favicon.ico') }}" type="image/x-icon" />
+    <link href="Content/cleditor/jquery.cleditor.css" rel="stylesheet" type="text/css" />
+    <link href="Content/Site.css" rel="stylesheet" type="text/css" />
+ 
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{{ url_for('static', filename = 'myscript.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('ul.tabs').tabs({
+                swipeable : true,
+                responsiveThreshold : 1920
+            });
+            $('.collapsible').collapsible();
+            $('.datepicker').datepicker();
+            $('.carousel').css("height","70%");
+        });
+        
+        var options = {
+            width: 400,
+            height: 200,
+            controls: "bold italic underline strikethrough subscript superscript | font size " + "style | color highlight removeformat | bullets numbering | outdent " + "indent | alignleft center alignright justify | undo redo | " + "rule link image unlink | cut copy paste pastetext | print source" };
+ 
+        var editor = $("#editor").cleditor(options)[0];
+ 
+        $("#btnClear").click(function (e) {
+            e.preventDefault();
+            editor.focus();
+            editor.clear();
+        });
+ 
+        $("#btnAddImage").click(function () {
+            editor.execCommand("insertimage",
+                "http://images.free-extras.com/pics/s/smile-1620.JPG", null, null);
+            editor.focus();
+        });
+ 
+        $("#btnGetHtml").click(function () {
+            alert($("#editor").val());
+        });
+    </script>
+</head>
+<body>
+    {% include 'includes/_sidenav.html' %}
+    {% include 'includes/_navbar.html' %}
+    <!-- <div class="container-fluid" style="padding:0%; margin-top:0%; height:70%; position: relative;"> -->
+        {% include 'includes/_messages.html' %}
+        {% block body %}{% endblock %}
+    <!-- </div> -->
+    <!-- {% include 'includes/_footer.html' %} -->
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('editor')
+    </script>
+</body>
+</html>
