@@ -157,8 +157,8 @@ def AddQuestionNext():
 		body = str(request.form['body'])
 		tags_list = ['tag1', 'tag2']
 		userId = session['userId']
-		post_question(title, body, tags_list,userId)
-		flash("Question Posted successfully", "success")
+		post_question(title, body, tags_list, userId)
+		flash("Question Posted successfully.", "success")
 		return redirect(url_for('home'))
 	
 

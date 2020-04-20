@@ -6,12 +6,9 @@ def post_question(qtitle, qbody, tags_list, userId):
         for tag in tags_list[1:]:
             tags += ", " + tag
         tags += "}"
-    
-    # hack to resolve issue because of form entry
-    # removing other characters including new-line from the end of qbody
-    while qbody[-1] != '>':
-        qbody = qbody[:-1]
 
+    title = repr(title)     # for '\n' character, converting into raw string
+    qbody = repr(qbody)
     insert_question = gql('''
         mutation {
             insert_Questions(
@@ -37,7 +34,7 @@ def post_question(qtitle, qbody, tags_list, userId):
 
 if __name__ == "__main__":
     qtitle = "question2"
-    qbody = "This is question #2."
+    qbody = "This is question #2.\n trying multi-line!!"
     tags_list = ["tag1", "tag2", "tag3"]
-    userId = 29
+    userId = 31
     post_question(qtitle, qbody, tags_list, userId)
