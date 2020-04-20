@@ -7,7 +7,7 @@ def post_question(qtitle, qbody, tags_list, userId):
             tags += ", " + tag
         tags += "}"
 
-    title = repr(title)     # for '\n' character, converting into raw string
+    qtitle = repr(qtitle)     # for '\n' character, converting into raw string
     qbody = repr(qbody)
     insert_question = gql('''
         mutation {
