@@ -1,0 +1,40 @@
+{% if session.logged_in %}
+<div class="row" style="margin:0.5%; padding: 0%;" align="center">
+    <div class="col s3 m2 l2"></div>
+    <div class="search_row col s1 m1 l1">
+        <a class='dropdown-trigger btn-large light-pink darken-1 right' href='#' data-target='dropdown1'><i class="material-icons">details</i></a>
+        <ul id='dropdown1' class='dropdown-content z-index:999;'>
+            <li><a href=""><i class="material-icons">person</i><span>Student</span></a></li>
+            <li class="divider" tabindex="-1"></li>
+            <li><a href=""><i class="material-icons">school</i><span>Professor</span></a></li>
+            <li class="divider" tabindex="-1"></li>
+            <li><a href=""><i class="material-icons">home</i><span>Lab</span></a></li>
+            <li class="divider" tabindex="-1"></li>
+            <li><a href=""><i class="material-icons">view_module</i><span>Field of Interest</span></a></li>
+        </ul>
+    </div>
+    <form method="POST" action="{{ url_for('search') }}" class="col s6 m6 l6">
+        <div class="row" style="margin-bottom:0%; padding: 0%;">
+            <div class="search_row col s10 m10 l10">
+                <nav class="light-blue lighten-5 right" style="height:54px; width:41.3%;">
+                    <div class="nav-wrapper">
+                        <div class="input-field">
+                            <input name="search_string" id="search_box" type="search" placeholder="Select Category" style="height: 54px; font-size: 22px" disabled>
+                            <label class="label-icon" for="search"><i class="material-icons black-text text-darken-4">search</i></label>
+                        </div>
+                        <div class="input-field">
+                            <input name="category" id="hidden_category" type="search" style="height: 54px; font-size: 22px">
+                            <!-- <label class="label-icon" for="search"><i class="material-icons black-text text-darken-4">search</i></label> -->
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="search_row col s1 m1 l1">
+                <button class="btn-large waves-effect light-pink darken-1 left" type="submit" name="action">
+                    <i class="material-icons right">search</i>
+                </button>
+            </div>
+        </div>
+    </form>
+ </div>
+ {% endif %}
