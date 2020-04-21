@@ -10,7 +10,7 @@ EN = spacy.load('en_core_web_sm')
 from sklearn.preprocessing import MultiLabelBinarizer
 import fasttext
 
-data = pd.read_csv('Preprocessed_data.csv')
+data = pd.read_csv('models/Preprocessed_data.csv')
 
 # Make a dict having tag frequencies
 data.tags = data.tags.apply(lambda x: x.split('|'))
@@ -43,20 +43,7 @@ tags_encoded = tag_encoder.fit_transform(final_tag_data)
 print(tags_encoded.shape)
 
 # Load pre-trained embeddings
-fasttext_model = fasttext.load_model('embeddings.bin')
-import gensim
-
-# WORD2VEC 
-W2V_SIZE = 300
-W2V_WINDOW = 7
-W2V_EPOCH = 32
-W2V_MIN_COUNT = 10
-w2v_model = gensim.models.word2vec.Word2Vec.load('SO_word2vec_embeddings.bin')
-
-#test embeddings
-#print("Similar terms to python\n")
-#print(fasttext_model.get_nearest_neighbors('python'))
-
+fasttext_model = fasttext.load_model('models/embeddings.bin')
 
 #Model Training
 
@@ -76,9 +63,9 @@ from keras.utils.np_utils import to_categorical
 
 #Max number of words in each complaint.
 MAX_SEQUENCE_LENGTH = 300
+
 #This is fixed.
 EMBEDDING_DIM = fasttext_model.get_dimension()
-'''
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(data.post_corpus)
 word_index = tokenizer.word_index
@@ -87,13 +74,12 @@ print('Found %s unique tokens.' % len(word_index))
 
 # saving
 import pickle
-with open('tokenizer.pickle', 'wb') as handle:
+with open('models/tokenizer.pickle', 'wb') as handle:
     pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
-'''
 
 # loading tokenizer
 import pickle
-with open('tokenizer.pickle', 'rb') as handle:
+with open('models/tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 word_index = tokenizer.word_index
 vocab_size = len(word_index)
@@ -160,7 +146,7 @@ history = model.fit(X_train_padded, y_train,
                     callbacks=callbacks)
 
 # Save model
-model.save('Tag_predictor.h5')
+model.save('models/Tag_predictor.h5')
 
 # Helper function to save the training history for plotting purposes
 
@@ -190,7 +176,7 @@ import keras.losses
 
 keras.losses.multitask_loss = multitask_loss
 model = load_model('Tag_predictor.h5')
-saveHist('./train_history.json', history)
+saveHist('models/train_history.json', history)
 history = loadHist('train_history.json')
 
 
