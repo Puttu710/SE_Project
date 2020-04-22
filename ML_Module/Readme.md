@@ -3,6 +3,10 @@
 ### Architecture used:
 ![The Architecture](https://github.com/BhaviD/SE_Project/blob/ML/arch_design/ML_Module.jpg)
 
+### Evaluation of the tag predictor model:
+![](https://github.com/BhaviD/SE_Project/blob/ML/ML_Module/evaluation.png)
+
+
 ### Instructions:
 1. To get similar questions to your given question Q:
   * call <code> searchresults(Q, no_of_questions) </code> in *sesearch.py* file
