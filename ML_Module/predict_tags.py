@@ -64,6 +64,7 @@ def multitask_loss(y_true, y_pred):
 
 from keras.models import load_model
 import keras.losses
+keras.losses.multitask_loss = multitask_loss
 model = load_model('Tag_predictor.h5')
 
 def predict_tags(text):
