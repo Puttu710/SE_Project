@@ -41,6 +41,8 @@ for i in range(0, len(data)):
         final_tag_data.append(temp)
         X.append(data.iloc[i].processed_title)
 
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 
 tag_encoder = MultiLabelBinarizer()
 tags_encoded = tag_encoder.fit_transform(final_tag_data)
