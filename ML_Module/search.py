@@ -7,6 +7,7 @@ import inflect
 from nltk.corpus import stopwords
 import spacy
 EN = spacy.load('en_core_web_sm')
+from sklearn.preprocessing import MultiLabelBinarizer
 import nltk
 
 def tokenize_text(text):
@@ -62,11 +63,85 @@ def tokenize_code(text):
 def preprocess_text(text):
     return ' '.join(normalize(tokenize_text(text)))
 
-data = pd.read_csv('models/Preprocessed_data.csv')
-all_title_embeddings = pd.read_csv('models/title_embeddings.csv').values
+data = pd.read_csv('Preprocessed_data.csv')
+all_title_embeddings = pd.read_csv('title_embeddings.csv').values
+
+# Make a dict having tag frequencies
+data.tags = data.tags.apply(lambda x: x.split('|'))
+tag_freq_dict = {}
+for tags in data.tags:
+    for tag in tags:
+        if tag not in tag_freq_dict:
+            tag_freq_dict[tag] = 0
+        else:
+            tag_freq_dict[tag] += 1
+
+
+# Get most common tags
+tags_to_use = 600
+tag_freq_dict_sorted = sorted(tag_freq_dict.items(), key=lambda x: x[1], reverse=True)
+final_tags = tag_freq_dict_sorted[:tags_to_use]
+
+for i in range(len(final_tags)):
+    final_tags[i] = final_tags[i][0]
+
+# Change tag data to only for final_tags
+final_tag_data = []
+X = []
+for i in range(0, len(data)):
+    temp = []
+    for tag in data.iloc[i].tags:
+        if tag in final_tags:
+            temp.append(tag)
+    if(temp != []):
+        final_tag_data.append(temp)
+        X.append(data.iloc[i].processed_title)
+
 #print(all_title_embeddings)
 # Import saved Wordvec Embeddings
-w2v_model = gensim.models.word2vec.Word2Vec.load('models/SO_word2vec_embeddings.bin')
+w2v_model = gensim.models.word2vec.Word2Vec.load('SO_word2vec_embeddings.bin')
+
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+
+tag_encoder = MultiLabelBinarizer()
+tags_encoded = tag_encoder.fit_transform(final_tag_data)
+
+# loading tokenizer
+import pickle
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
+word_index = tokenizer.word_index
+vocab_size = len(word_index)
+
+import keras.backend as K
+
+# Custom loss function to handle multilabel classification task
+def multitask_loss(y_true, y_pred):
+    # Avoid divide by 0
+    y_pred = K.clip(y_pred, K.epsilon(), 1 - K.epsilon())
+    # Multi-task loss
+    return K.mean(K.sum(- y_true * K.log(y_pred) - (1 - y_true) * K.log(1 - y_pred), axis=1))
+
+
+from keras.models import load_model
+import keras.losses
+keras.losses.multitask_loss = multitask_loss
+model = load_model('Tag_predictor.h5')
+
+def predict_tags(text):
+    # Tokenize text
+    x_test = pad_sequences(tokenizer.texts_to_sequences([text]), maxlen=300)
+    # Predict
+    prediction = model.predict([x_test])[0]
+    for i,value in enumerate(prediction):
+        if value > 0.5:
+            prediction[i] = 1
+        else:
+            prediction[i] = 0
+    tags = tag_encoder.inverse_transform(np.array([prediction]))
+    return tags
+
 
 def question_to_vec(question, embeddings, dim=300):
     question_embedding = np.zeros(dim)
