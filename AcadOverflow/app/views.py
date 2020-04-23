@@ -20,7 +20,7 @@ from gql_client.user_exists import user_exists
 from gql_client.get_login_details import get_login_details
 from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_question import post_question
-from gql_client.query_question_for_list import query_question_for_list
+from gql_client.query_question_for_page import query_question_for_page
 
 # Index
 @app.route('/')
@@ -174,3 +174,25 @@ def SearchQuestionNext():
 		return "Question Searching: %s" % question
 	return "Question searched successfully"
 
+@app.route('/dummy')
+def dummy():
+	return render_template('dummy.html')
+
+@app.route('/question_details', methods = ['GET', 'POST'])
+def question_details():
+	print(request.method)
+	if request.method == 'POST':
+		id = request.form['question_id']
+		print(id)
+		try:
+			print('trying...')
+			question = query_question_for_page(id)
+			print('Question received')
+			flash('Question details received', 'success')
+			return render_template('question_details.html', question = question)
+		except Exception as e:
+			print(e)
+			flash('Something went wrong!! : Exception', 'danger')
+	elif request.method == 'GET':
+		flash('Something went wrong!! Please try again', 'danger')
+	return "Something went wrong...!!!"

@@ -12,12 +12,14 @@ def query_question_for_page(Id):
                     VoteCount
                     Answer_User {
                         Id
+                        EmailId
                         FirstName
                         LastName
                     }
                 }
                 Question_User {
                     Id
+                    EmailId
                     FirstName
                     LastName
                 }
@@ -27,6 +29,7 @@ def query_question_for_page(Id):
     question = client.execute(query_question)
     question = question['Questions_by_pk']  # "by_pk" means to query an entry by the private key
     pprint.pprint (question)
+    return question
 
 if __name__ == "__main__":
     query_question_for_page(2)

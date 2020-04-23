@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{{question}}
+<div class = 'container'>
+<div >
+    <h4>{{question.title}}</h4>
+    <table>
+        <tr>
+            <td>
+                Posted on (Get date of posting) 
+            </td>
+            <td style = 'padding: 10px;'>
+                by (userid of person)
+            </td>
+            <td style = 'padding: 10px;'>
+                00
+            </td>
+            <td>
+                <button type = "button">
+                    up
+                </button>
+            </td>
+            <td>
+                <button type = "button">
+                    down
+                </button>
+            </td>
+            <td style = 'padding: 10px;'>
+                00
+            </td>
+        </tr>
+    </table>
+</div>
+<div class = 'row'>
+    <h2>Answers</h2>
+        for answer in answers 
+</div>
+
+<div class = 'row'>
+    <table>
+        <tr>
+            <td>
+                Posted on (Get date of posting) 
+            </td>
+            <td style = 'padding: 10px;'>
+                by (userid of person)
+            </td>
+            <td style = 'padding: 10px;'>
+                00
+            </td>
+            <td>
+                <button type = "button">
+                    up
+                </button>
+            </td>
+            <td>
+                <button type = "button">
+                    down
+                </button>
+            </td>
+            <td style = 'padding: 10px;'>
+                00
+            </td>
+        </tr>
+    </table>
+    Print all of the answers from the loop for the given question.
+    Question by id
+</div>
+</div>
+{% endblock %}
