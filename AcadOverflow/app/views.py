@@ -11,6 +11,7 @@ from functools import wraps
 from datetime import datetime
 from operator import attrgetter
 import sys
+import re
 
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
@@ -21,6 +22,7 @@ from gql_client.get_login_details import get_login_details
 from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_question import post_question
 from gql_client.query_question_for_page import query_question_for_page
+from gql_client.post_answer import post_answer
 
 # Index
 @app.route('/')
@@ -174,22 +176,54 @@ def SearchQuestionNext():
 		return "Question Searching: %s" % question
 	return "Question searched successfully"
 
+# Dummy Page to be deleted once the question link works
 @app.route('/dummy')
 def dummy():
 	return render_template('dummy.html')
 
+# Display question details
 @app.route('/question_details', methods = ['GET', 'POST'])
 def question_details():
 	print(request.method)
 	if request.method == 'POST':
 		id = request.form['question_id']
-		print(id)
+	elif request.method == 'GET':
+		id = request.args.get("question_id")
+	print(id)
+	try:
+		print('trying to fetch the question...')
+		question = query_question_for_page(id)
+		if question is None:
+			flash('No such question found', 'warning')
+			return render_template('dummy.html', question = question)
+		print('Question received')
+		flash('Question details received', 'success')
+		return render_template('question_details.html', question = question)
+	except Exception as e:
+		print(e)
+		flash('Something went wrong!! : Exception', 'danger')
+	return "Something went wrong...!!!"
+
+#Posting a new answer
+@app.route('/post_new_answer', methods = ['GET', 'POST'])
+def post_new_answer():
+	print("POSTING A NEW ANSWER")
+	print(request.method)
+	if request.method == 'POST':
+		aBody = str(request.form['aBody'])
+		clean = re.compile('<.*?>')
+		aBody = re.sub(clean, '', aBody)
+		print(aBody)
+		qId = request.form['qId']
+		print(qId)
+		userId = session['userId']
+		print(userId)
 		try:
 			print('trying...')
-			question = query_question_for_page(id)
-			print('Question received')
-			flash('Question details received', 'success')
-			return render_template('question_details.html', question = question)
+			post_answer(qId, aBody, userId)
+			print('Answer added to the database')
+			flash('New answer added', 'success')
+			return redirect(url_for('question_details', question_id = qId))
 		except Exception as e:
 			print(e)
 			flash('Something went wrong!! : Exception', 'danger')

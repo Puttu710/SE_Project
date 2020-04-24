@@ -15,3 +15,8 @@ client = Client(
     transport=sample_transport,
     fetch_schema_from_transport=True,
 )
+
+def process_entry_for_gql(sEntry):
+    sEntry = repr(sEntry) # for '\n' character, converting into raw string
+    sEntry = sEntry.replace("\"", "\\\"")
+    return sEntry

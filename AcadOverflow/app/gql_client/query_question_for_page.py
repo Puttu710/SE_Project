@@ -4,12 +4,15 @@ import pprint
 def query_question_for_page(Id):
     query_question = gql('''{
             Questions_by_pk(Id: ''' + str(Id) + ''') {
+                Id
                 Title
                 Body
                 VoteCount
+                created_at
                 Question_Answers(order_by: {VoteCount: desc}) {
                     Body
                     VoteCount
+                    created_at
                     Answer_User {
                         Id
                         EmailId
