@@ -6,9 +6,10 @@
 
 
 ### Instructions:
-1. To get similar questions to your given question Q:
+1. Download all the models in models folder.
+2. To get similar questions to your given question Q:
   * call <code> searchresults(Q, no_of_questions) </code> in *search.py* file
     * The output will be a json consisting of <code> {title, url, tags, votes, body} </code> 
-2. To get predicted tags for any question Q:
-  * call <code> predict_tags(Q) in *search.py* file
+3. To get predicted tags for any question Q:
+  * call <code> predict_tags(Q) </code> in *search.py* file
     * The output will be a list of predicted tags
