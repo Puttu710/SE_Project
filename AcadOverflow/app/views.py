@@ -21,6 +21,7 @@ from gql_client.get_login_details import get_login_details
 from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_question import post_question
 from gql_client.query_question_for_list import query_question_for_list
+from gql_client.query_question_for_page import query_question_for_page
 
 # Index
 @app.route('/')
@@ -149,17 +150,18 @@ def AddQuestionNext():
 		body = request.args.get("body")
 		tags_list = ['tag1', 'tag2']
 		userId = session['userId']
-		post_question(title, body, tags_list, userId)
-		return "Question added with title : %s" % title
+		question_id = post_question(title, body, tags_list, userId)
+		return render_template('post_question_confirmation.html', id=question_id)
 			
+
 	elif request.method == "POST":
 		title = request.form['title']
 		body = str(request.form['body'])
 		tags_list = ['tag1', 'tag2']
 		userId = session['userId']
-		post_question(title, body, tags_list, userId)
-		flash("Question Posted successfully.", "success")
-		return redirect(url_for('home'))
+		question_id = post_question(title, body, tags_list, userId)
+		# flash("Question Posted successfully.", "success")
+		return render_template('post_question_confirmation.html',id=question_id)
 	
 
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
