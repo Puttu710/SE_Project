@@ -1,14 +1,17 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client, process_entry_for_gql
 
 def post_question(qtitle, qbody, tags_list, userId):
-    if len(tags_list) != 0:
-        tags = "{" + tags_list[0]
-        for tag in tags_list[1:]:
-            tags += ", " + tag
-        tags += "}"
+    client = get_gql_client()
 
-    qtitle = repr(qtitle)     # for '\n' character, converting into raw string
-    qbody = repr(qbody)
+    if len(tags_list) != 0:
+        tags = ""
+        for tag in tags_list[1:]:
+            tags += tag + "|"
+        tags = tags[:-1]    # remove the last '|'
+
+    qtitle = process_entry_for_gql(qtitle)     # for '\n' character, converting into raw string
+    qbody = process_entry_for_gql(qbody)
+
     insert_question = gql('''
         mutation {
             insert_Questions(

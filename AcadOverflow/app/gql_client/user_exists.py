@@ -1,18 +1,21 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client
 import sys
 
 def user_exists(emailId):
+    client = get_gql_client()
+    
     query_user = gql('''
         query {
-            Users (where: {EmailId: { _like: "''' + emailId + '''"}}) {
+            userEmailId (EmailId: "''' + emailId + '''") {
                 EmailId
             }
         }
     ''')
     user = client.execute(query_user)
-    if len(user["Users"]) == 0:
+    print (user["userEmailId"])
+    if not user["userEmailId"]:
         return False
-    if emailId != user["Users"][0]["EmailId"]:
+    if emailId != user["userEmailId"]["EmailId"]:
         return False
     return True
 

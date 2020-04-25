@@ -1,15 +1,14 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client
 
 def downvote_question(qId):
+    client = get_gql_client()
+    
     downvote = gql('''
         mutation {
-            update_Questions(
-                where: {
-                    Id: { _eq: ''' + str(qId) + ''' }
-                }, 
-                _inc: { VoteCount: -1 }
-            ) {
-                returning { VoteCount }
+            updateQuestionVotecount (Id: ''' + str(qId) + ''', val: -1) {
+                question {
+                    VoteCount
+                }
             }
         }
     ''')

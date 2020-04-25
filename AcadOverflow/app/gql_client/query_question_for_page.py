@@ -1,22 +1,30 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client
 import pprint
 
 def query_question_for_page(Id):
-    query_question = gql('''{
-            Questions_by_pk(Id: ''' + str(Id) + ''') {
+    client = get_gql_client()
+    
+    query_question = gql('''
+        query {
+            questionWithId (Id: ''' + str(Id) + ''') {
                 Title
                 Body
                 VoteCount
-                Question_Answers(order_by: {VoteCount: desc}) {
-                    Body
-                    VoteCount
-                    Answer_User {
-                        Id
-                        FirstName
-                        LastName
+                answers {
+                    edges {
+                        node {
+                            Id
+                            Body
+                            VoteCount
+                            answerAuthor {
+                                Id
+                                FirstName
+                                LastName
+                            }
+                        }
                     }
                 }
-                Question_User {
+                questionAuthor {
                     Id
                     FirstName
                     LastName
@@ -25,8 +33,10 @@ def query_question_for_page(Id):
         }
     ''')
     question = client.execute(query_question)
-    question = question['Questions_by_pk']  # "by_pk" means to query an entry by the private key
-    pprint.pprint (question)
+    question = question['questionWithId']
+    return question
+    # pprint.pprint (question)
 
 if __name__ == "__main__":
-    query_question_for_page(2)
+    question = query_question_for_page(2)
+    pprint.pprint (question)

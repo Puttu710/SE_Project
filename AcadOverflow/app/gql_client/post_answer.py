@@ -1,16 +1,18 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client, process_entry_for_gql
 
 def post_answer(qId, aBody, userId):
+    client = get_gql_client()
+    
+    aBody = process_entry_for_gql(aBody)
+
     insert_answer = gql('''
         mutation {
-            insert_Answers(
-                objects: {
-                    QuestionId: ''' + str(qId) + ''',
-                    Body: "''' + aBody + '''",
-                    UserId: ''' + str(userId) + '''
-                }
+            createAnswer (
+                UserId: ''' + str(userId) + ''',
+                Body: "''' + aBody + '''",
+                QuestionId: ''' + str(qId) + '''
             ) {
-                returning {
+                answer {
                     Id
                 }
             }
@@ -24,7 +26,7 @@ def post_answer(qId, aBody, userId):
         print (e)
 
 if __name__ == "__main__":
-    qId = 8
+    qId = 1
     aBody = "This is an answer #1 for question #8."
-    userId = 30
+    userId = 1
     post_answer(qId, aBody, userId)

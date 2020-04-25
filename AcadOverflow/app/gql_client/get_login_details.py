@@ -1,22 +1,24 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client
 import sys
 
 def get_login_details(emailId):
+    client = get_gql_client()
+    
     query_user = gql('''
         query {
-            Users (where: {EmailId: { _like: "''' + emailId + '''"}}) {
-                EmailId,
+            userEmailId (EmailId: "''' + emailId + '''") {
+                Id
                 FirstName,
                 LastName,
-                Password,
-                Id
+                EmailId,
+                Password
             }
         }
     ''')
     user = client.execute(query_user)
-    if len(user["Users"]) == 0:
+    if len(user["userEmailId"]) == 0:
         return None
-    return user["Users"][0]
+    return user["userEmailId"]
 
 if __name__ == "__main__":
     emailId = "bhavi.dhingra@students.iiit.ac.in"

@@ -1,28 +1,32 @@
-from graphql_client import gql, client
+from graphql_client import gql, get_gql_client
+
 
 def register_user (emailId, firstName, lastName, password):
+    client = get_gql_client()
+
     insert_users = gql('''
         mutation {
-            insert_Users (
-                objects:{
-                    EmailId: "''' + emailId + '''",
-                    FirstName: "''' + firstName + '''",
-                    LastName: "''' + lastName + '''",
-                    Password: "''' + password + '''"
-                }
-            ) {
-                returning {
+            createUser
+            (
+                EmailId: "''' + emailId + '''",
+                FirstName: "''' + firstName + '''",
+                LastName: "''' + lastName + '''",
+                Password: "''' + password + '''"
+            ) 
+            {
+                user 
+                {
                     Id
                 }
             }
         }
     ''')
     mutation_result = client.execute(insert_users)
-    print (mutation_result)
+    # print (mutation_result)
 
 if __name__ == "__main__":
-    emailId = "bhavi.dhingra@students.iiit.ac.in"
-    firstName = "Bhavi"
-    lastName = "Dhingra"
-    password = "bhavi"
+    emailId = "surbhi.sharma@students.iiit.ac.in"
+    firstName = "Surbhi"
+    lastName = "Sharma"
+    password = "Surbhi"
     register_user(emailId, firstName, lastName, password)
