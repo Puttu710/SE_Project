@@ -8,14 +8,20 @@
         <div class="col s12">
           <div class="card">
             <div class="card-content">
-              <form method="POST" action="home.html">
+              <form method="POST" action="/post_new_question">
                 <div class="row" style="text-align: center;">
                   <div class="col s3"></div>
                     <div class="col s6">
                       <!-- <button class="btn blue darken-1 waves-effect waves-light" type="submit" formaction="/home" name="action">confirm to post
                         <i class="material-icons right">send</i>
                       </button> -->
-                      <a href="/home" class="btn blue darken-1 waves-effect waves-light" type="submit">&nbsp; Confirm to Post</a>
+                      <button type = "submit" class = "btn btn-primary">
+                        Confirm to post
+                      </button>
+                      {{id}}
+                      <input value = {{title}} id = 'qtitle' style = 'visibility: hidden;' name = 'qtitle'>
+                      <input value = {{body}} id = 'qbody' style = 'visibility: hidden;' name = 'qbody'>
+                      <input value = {{tags_list}} id = 'qtags' style = 'visibility: hidden;' name = 'qtags'>
                     </div>
                     <div class="col s3"></div>
                 </div>
@@ -36,42 +42,13 @@
       <hr>
       <div class="data-container" style="min-height: 175px" id="demo1">
         <ul>
-          <li>
-            <a href="https://www.covid19india.org/">question1</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question2</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question3</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question4</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question5</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question6</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question7</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question8</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question9</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question10</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question11</a>
-          </li>
-          <li>
-            <a href="https://www.covid19india.org/">question12</a>
-          </li>
+          {% for question in id_list %}
+            <div class = 'card-panel'>
+              <li>
+                <a href = '/question_details?question_id={{question.Id}}'>{{question.Title}}</a>
+              </li>
+            </div>
+          {% endfor %}
         </ul>
       </div>
       <!-- <div class="paginationjs paginationjs-big">
