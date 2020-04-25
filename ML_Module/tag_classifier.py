@@ -3,14 +3,12 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import spacy
-#import tensorflow_hub as hub
 import matplotlib.pyplot as plt
-#from wordcloud import WordCloud
 EN = spacy.load('en_core_web_sm')
 from sklearn.preprocessing import MultiLabelBinarizer
 import fasttext
 
-data = pd.read_csv('models/Preprocessed_data.csv')
+data = pd.read_csv('Preprocessed_data.csv')
 
 # Make a dict having tag frequencies
 data.tags = data.tags.apply(lambda x: x.split('|'))
@@ -25,33 +23,48 @@ for tags in data.tags:
 
 # Get most common tags
 tags_to_use = 600
-tag_freq_dict_sorted = dict(sorted(tag_freq_dict.items(), key=lambda x: x[1], reverse=True))
-final_tags = list(tag_freq_dict_sorted.keys())[:tags_to_use]
+tag_freq_dict_sorted = sorted(tag_freq_dict.items(), key=lambda x: x[1], reverse=True)
+final_tags = tag_freq_dict_sorted[:tags_to_use]
+
+for i in range(len(final_tags)):
+    final_tags[i] = final_tags[i][0]
 
 # Change tag data to only for final_tags
 final_tag_data = []
-for tags in data.tags:
+X = []
+for i in range(0, len(data)):
     temp = []
-    for tag in tags:
+    for tag in data.iloc[i].tags:
         if tag in final_tags:
             temp.append(tag)
-    final_tag_data.append(temp)
+    if(temp != []):
+        final_tag_data.append(temp)
+        X.append(data.iloc[i].processed_title)
 
 
 tag_encoder = MultiLabelBinarizer()
 tags_encoded = tag_encoder.fit_transform(final_tag_data)
-print(tags_encoded.shape)
 
 # Load pre-trained embeddings
-fasttext_model = fasttext.load_model('models/embeddings.bin')
+fasttext_model = fasttext.load_model('embeddings.bin')
+import gensim
+
+# WORD2VEC 
+W2V_SIZE = 300
+W2V_WINDOW = 7
+W2V_EPOCH = 32
+W2V_MIN_COUNT = 10
+w2v_model = gensim.models.word2vec.Word2Vec.load('SO_word2vec_embeddings.bin')
+
 
 #Model Training
 
 #Split into train and test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(np.array(data.processed_title), tags_encoded, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(np.array(X), tags_encoded, test_size=0.2, random_state=42)
 print("TRAIN size:", len(X_train))
 print("TEST size:", len(X_test))
+print("Y _ TEST:", y_train[1])
 
 
 #Tokenizing
@@ -63,9 +76,9 @@ from keras.utils.np_utils import to_categorical
 
 #Max number of words in each complaint.
 MAX_SEQUENCE_LENGTH = 300
-
 #This is fixed.
-EMBEDDING_DIM = fasttext_model.get_dimension()
+EMBEDDING_DIM = 300
+
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(data.post_corpus)
 word_index = tokenizer.word_index
@@ -74,16 +87,18 @@ print('Found %s unique tokens.' % len(word_index))
 
 # saving
 import pickle
-with open('models/tokenizer.pickle', 'wb') as handle:
+with open('tokenizer.pickle', 'wb') as handle:
     pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
 # loading tokenizer
 import pickle
-with open('models/tokenizer.pickle', 'rb') as handle:
+with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 word_index = tokenizer.word_index
 vocab_size = len(word_index)
 print('Found %s unique tokens.' % len(word_index))
+
 
 # Convert the data to padded sequences
 X_train_padded = tokenizer.texts_to_sequences(X_train)
@@ -140,13 +155,13 @@ callbacks = [ ReduceLROnPlateau(monitor='val_loss', patience=5, cooldown=0),
 BATCH_SIZE = 256	
 history = model.fit(X_train_padded, y_train,
                     batch_size=BATCH_SIZE,
-                    epochs=15,
+                    epochs=8,
                     validation_split=0.1,
                     verbose=1,
                     callbacks=callbacks)
 
 # Save model
-model.save('models/Tag_predictor.h5')
+model.save('Tag_predictor.h5')
 
 # Helper function to save the training history for plotting purposes
 
@@ -176,7 +191,7 @@ import keras.losses
 
 keras.losses.multitask_loss = multitask_loss
 model = load_model('Tag_predictor.h5')
-saveHist('models/train_history.json', history)
+#saveHist('./train_history.json', history)
 history = loadHist('train_history.json')
 
 
