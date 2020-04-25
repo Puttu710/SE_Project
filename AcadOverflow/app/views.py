@@ -22,7 +22,6 @@ from gql_client.get_login_details import get_login_details
 from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_question import post_question
 from gql_client.query_question_for_page import query_question_for_page
-from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_answer import post_answer
 
 # Index
