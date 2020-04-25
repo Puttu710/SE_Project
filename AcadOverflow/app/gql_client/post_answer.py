@@ -1,6 +1,7 @@
-from graphql_client import gql, client
+from graphql_client import gql, client, process_entry_for_gql
 
 def post_answer(qId, aBody, userId):
+    aBody = process_entry_for_gql(aBody)
     insert_answer = gql('''
         mutation {
             insert_Answers(

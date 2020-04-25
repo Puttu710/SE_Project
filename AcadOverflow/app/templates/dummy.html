@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<form action = "/question_details" method = 'POST'>
+    <input type = "text" id = "question_id" name = "question_id">
+    <input type = "submit" value = "Submit">
+</form>
+
+{% endblock %}
