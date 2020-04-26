@@ -12,23 +12,27 @@ from datetime import datetime
 from operator import attrgetter
 import sys
 import re
+
 sys.path.insert(0, "./")
+
 import tensorflow as tf
 import keras
-from keras.models import load_model
 import os
 import numpy as np
 import spacy
 import pandas as pd
 import keras.losses
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
 import pickle
 import keras.backend as K
-from sklearn.preprocessing import MultiLabelBinarizer
 import utils
+
+from keras.models import load_model
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from sklearn.preprocessing import MultiLabelBinarizer
 from search import searchresults
 from utils import preprocess_text
+
 EN = spacy.load('en_core_web_sm')
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
@@ -239,11 +243,13 @@ def AddQuestionNext():
 	elif request.method == "POST":
 		title = request.form['title']
 		body = str(request.form['body'])
-  userId = session['userId']
 	results = searchresults(title, 5)
+	print('RESULT')
+	print(results)
 	tags_list = list(predict_tags(title))
-  json_result = jsonify({'results':results})
-  print(json_result)
+	json_result = jsonify({'results':results})
+	print('JSON')
+	print(json_result)
 	return render_template('post_question_confirmation.html',title = title, body = body, tags_list = tags_list, id_list = questions)
 	
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
