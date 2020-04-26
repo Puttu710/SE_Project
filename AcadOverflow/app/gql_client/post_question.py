@@ -1,4 +1,5 @@
 from graphql_client import gql, client
+import pprint
 
 def post_question(qtitle, qbody, tags_list, userId):
     if len(tags_list) != 0:
@@ -25,7 +26,9 @@ def post_question(qtitle, qbody, tags_list, userId):
             }
         }
     ''')
-
+    print('new id = ')
+    print(insert_question)
+    pprint.pprint (insert_question)
     try:
         mutation_result = client.execute(insert_question)
         print ("Question Id: ", mutation_result)

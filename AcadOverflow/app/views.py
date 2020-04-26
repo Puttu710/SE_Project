@@ -227,29 +227,25 @@ def ask_question():
 @app.route('/AddQuestionNext',methods=['GET','POST'])
 def AddQuestionNext():
 	# To find out the method of request, use 'request.method'
+	id_list = [75, 76, 77, 78, 79, 80]
+	questions = []
+	for item in id_list:
+		question = query_question_for_list(item)
+		questions.append(question)
+	print(questions)
 	if request.method == "GET":
 		title = request.args.get("title")
-		body = request.args.get("body")
-		tags_list = ['tag1', 'tag2']
-		userId = session['userId']
-		question_id = post_question(title, body, tags_list, userId)
-		results = searchresults(title, 8)
-		tags_list = list(predict_tags(title))
-		return jsonify({'results':results})
-		return render_template('post_question_confirmation.html', id=question_id)
-			
+		body = request.args.get("body")	
 	elif request.method == "POST":
 		title = request.form['title']
 		body = str(request.form['body'])
-		tags_list = ['tag1', 'tag2']
-		userId = session['userId']
-		question_id = post_question(title, body, tags_list, userId)
-		# flash("Question Posted successfully.", "success")
-		results = searchresults(title, 5)
-		tags_list = list(predict_tags(title))
-		return jsonify({'results':results})
-		return render_template('post_question_confirmation.html',id=question_id)
-
+  userId = session['userId']
+	results = searchresults(title, 5)
+	tags_list = list(predict_tags(title))
+  json_result = jsonify({'results':results})
+  print(json_result)
+	return render_template('post_question_confirmation.html',title = title, body = body, tags_list = tags_list, id_list = questions)
+	
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
 	# To find out the method of request, use 'request.method'
@@ -293,8 +289,6 @@ def question_details():
 #Posting a new answer
 @app.route('/post_new_answer', methods = ['GET', 'POST'])
 def post_new_answer():
-	print("POSTING A NEW ANSWER")
-	print(request.method)
 	if request.method == 'POST':
 		aBody = str(request.form['aBody'])
 		clean = re.compile('<.*?>')
@@ -310,6 +304,27 @@ def post_new_answer():
 			print('Answer added to the database')
 			flash('New answer added', 'success')
 			return redirect(url_for('question_details', question_id = qId))
+		except Exception as e:
+			print(e)
+			flash('Something went wrong!! : Exception', 'danger')
+	elif request.method == 'GET':
+		flash('Something went wrong!! Please try again', 'danger')
+	return "Something went wrong...!!!"
+
+@app.route('/post_new_question', methods = ['GET', 'POST'])
+def post_new_question():
+	if request.method == 'POST':
+		qtitle = request.form['qtitle']
+		qbody = str(request.form['qbody'])
+		clean = re.compile('<.*?>')
+		qbody = re.sub(clean, '', qbody)
+		tags_list = request.form['qtags']
+		userId = session['userId']
+		try:
+			print('trying...')
+			post_question(qtitle, qbody, tags_list, userId)
+			flash('New Question added', 'success')
+			return redirect(url_for('home'))
 		except Exception as e:
 			print(e)
 			flash('Something went wrong!! : Exception', 'danger')

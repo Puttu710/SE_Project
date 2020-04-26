@@ -4,6 +4,7 @@ def query_question_for_list(Id):
     query_question = gql('''
         query {
             Questions_by_pk(Id: ''' + str(Id) + ''') {
+                Id
                 Title
                 Body
                 VoteCount
