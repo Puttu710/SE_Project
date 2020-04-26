@@ -9,7 +9,11 @@ import spacy
 EN = spacy.load('en_core_web_sm')
 from sklearn.preprocessing import MultiLabelBinarizer
 import nltk
+import sys
 
+sys.path.insert(0, '../AcadOverflow/app')
+sys.path.insert(0, '../AcadOverflow')
+sys.path.insert(0, './')
 def tokenize_text(text):
     "Apply tokenization using spacy to docstrings."
     tokens = EN.tokenizer(text)
@@ -63,8 +67,8 @@ def tokenize_code(text):
 def preprocess_text(text):
     return ' '.join(normalize(tokenize_text(text)))
 
-data = pd.read_csv('Preprocessed_data.csv')
-all_title_embeddings = pd.read_csv('title_embeddings.csv').values
+data = pd.read_csv('../ML_Module/models/Preprocessed_data.csv')
+all_title_embeddings = pd.read_csv('../ML_Module/models/title_embeddings.csv').values
 
 # Make a dict having tag frequencies
 data.tags = data.tags.apply(lambda x: x.split('|'))
@@ -99,7 +103,7 @@ for i in range(0, len(data)):
 
 #print(all_title_embeddings)
 # Import saved Wordvec Embeddings
-w2v_model = gensim.models.word2vec.Word2Vec.load('SO_word2vec_embeddings.bin')
+w2v_model = gensim.models.word2vec.Word2Vec.load('../ML_Module/models/SO_word2vec_embeddings.bin')
 
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
@@ -109,7 +113,7 @@ tags_encoded = tag_encoder.fit_transform(final_tag_data)
 
 # loading tokenizer
 import pickle
-with open('tokenizer.pickle', 'rb') as handle:
+with open('../ML_Module/models/tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 word_index = tokenizer.word_index
 vocab_size = len(word_index)
@@ -127,7 +131,7 @@ def multitask_loss(y_true, y_pred):
 from keras.models import load_model
 import keras.losses
 keras.losses.multitask_loss = multitask_loss
-model = load_model('Tag_predictor.h5')
+model = load_model('../ML_Module/models/Tag_predictor.h5')
 
 def predict_tags(text):
     # Tokenize text
