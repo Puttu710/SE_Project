@@ -34,6 +34,7 @@ from search import searchresults
 from utils import preprocess_text
 
 EN = spacy.load('en_core_web_sm')
+
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
 
@@ -53,8 +54,7 @@ def multitask_loss(y_true, y_pred):
 	# Multi-task loss
 	return K.mean(K.sum(- y_true * K.log(y_pred) - (1 - y_true) * K.log(1 - y_pred), axis=1))
 
-def load_tag_encoder():
-	data = pd.read_csv('../ML_Module/models/Preprocessed_data.csv')
+def load_tag_encoder(data):
 	data.tags = data.tags.apply(lambda x: x.split('|'))
 	tag_freq_dict = {}
 	for tags in data.tags:
@@ -98,7 +98,8 @@ def predict_tags(text):
 	tags = tag_encoder.inverse_transform(np.array([prediction]))
 	return tags
 
-tag_encoder = load_tag_encoder()
+data = pd.read_csv('../ML_Module/models/Preprocessed_data.csv')
+tag_encoder = load_tag_encoder(data)
 
 MAX_SEQUENCE_LENGTH = 300
 with open('../ML_Module/models/tokenizer.pickle', 'rb') as handle:
@@ -231,27 +232,17 @@ def ask_question():
 @app.route('/AddQuestionNext',methods=['GET','POST'])
 def AddQuestionNext():
 	# To find out the method of request, use 'request.method'
-	id_list = [75, 76, 77, 78, 79, 80]
-	questions = []
-	for item in id_list:
-		question = query_question_for_list(item)
-		questions.append(question)
-	print(questions)
 	if request.method == "GET":
 		title = request.args.get("title")
 		body = request.args.get("body")	
 	elif request.method == "POST":
 		title = request.form['title']
 		body = str(request.form['body'])
-	results = searchresults(title, 5)
-	print('RESULT')
-	print(results)
+	search_results = searchresults(title, 5)
 	tags_list = list(predict_tags(title))
-	json_result = jsonify({'results':results})
-	print('JSON')
-	print(json_result)
-	return render_template('post_question_confirmation.html',title = title, body = body, tags_list = tags_list, id_list = questions)
-	
+
+	return render_template('post_question_confirmation.html', title = title, body = body, tags_list = tags_list, similar_questions = search_results)
+
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
 	# To find out the method of request, use 'request.method'

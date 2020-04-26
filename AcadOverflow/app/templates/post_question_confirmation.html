@@ -39,7 +39,7 @@
       <hr>
       <div class="data-container" style="min-height: 175px" id="demo1">
         <ul>
-          {% for question in id_list %}
+          {% for question in similar_questions %}
             <div class = 'card-panel'>
               <li>
                 <a href = '/question_details?question_id={{question.Id}}'>{{question.Title}}</a>
