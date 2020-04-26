@@ -3,7 +3,7 @@
 # Handlers are written as Python Functions. 
 # Each View Function is mapped to one or more request URLs.
 
-from flask import render_template, flash, redirect, url_for, session, logging, request
+from flask import render_template, flash, redirect, url_for, session, logging, request, json, jsonify
 from app import app
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
@@ -12,9 +12,27 @@ from datetime import datetime
 from operator import attrgetter
 import sys
 import re
-
+sys.path.insert(0, "./")
+import tensorflow as tf
+import keras
+from keras.models import load_model
+import os
+import numpy as np
+import spacy
+import pandas as pd
+import keras.losses
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+import pickle
+import keras.backend as K
+from sklearn.preprocessing import MultiLabelBinarizer
+import utils
+from search import searchresults
+from utils import preprocess_text
+EN = spacy.load('en_core_web_sm')
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
+
 
 from gql_client.register_users import register_user
 from gql_client.user_exists import user_exists
@@ -23,6 +41,69 @@ from gql_client.query_question_for_list import query_question_for_list
 from gql_client.post_question import post_question
 from gql_client.query_question_for_page import query_question_for_page
 from gql_client.post_answer import post_answer
+
+# Custom loss function to handle multilabel classification task
+def multitask_loss(y_true, y_pred):
+	# Avoid divide by 0
+	y_pred = K.clip(y_pred, K.epsilon(), 1 - K.epsilon())
+	# Multi-task loss
+	return K.mean(K.sum(- y_true * K.log(y_pred) - (1 - y_true) * K.log(1 - y_pred), axis=1))
+
+def load_tag_encoder():
+	data = pd.read_csv('../ML_Module/models/Preprocessed_data.csv')
+	data.tags = data.tags.apply(lambda x: x.split('|'))
+	tag_freq_dict = {}
+	for tags in data.tags:
+		for tag in tags:
+			if tag not in tag_freq_dict:
+				tag_freq_dict[tag] = 0
+			else:
+				tag_freq_dict[tag] += 1
+	# Get most common tags
+	tags_to_use = 600
+	tag_freq_dict_sorted = sorted(tag_freq_dict.items(), key=lambda x: x[1], reverse=True)
+	final_tags = tag_freq_dict_sorted[:tags_to_use]
+	for i in range(len(final_tags)):
+		final_tags[i] = final_tags[i][0]
+
+	final_tag_data = []
+	X = []
+	for i in range(0, len(data)):
+		temp = []
+		for tag in data.iloc[i].tags:
+			if tag in final_tags:
+				temp.append(tag)
+			if(temp != []):
+				final_tag_data.append(temp)
+				X.append(data.iloc[i].processed_title)
+	tag_encoder = MultiLabelBinarizer()
+	tags_encoded = tag_encoder.fit_transform(final_tag_data)
+	return tag_encoder
+
+def predict_tags(text):
+	# Tokenize text
+	x_test = pad_sequences(tokenizer.texts_to_sequences([text]), maxlen=300)
+	# Predict
+	with graph.as_default():
+		prediction = model.predict([x_test])[0]
+	for i,value in enumerate(prediction):
+		if value > 0.5:
+			prediction[i] = 1
+		else:
+			prediction[i] = 0
+	tags = tag_encoder.inverse_transform(np.array([prediction]))
+	return tags
+
+tag_encoder = load_tag_encoder()
+
+MAX_SEQUENCE_LENGTH = 300
+with open('../ML_Module/models/tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
+keras.losses.multitask_loss = multitask_loss
+global graph
+graph = tf.get_default_graph()
+model = load_model('../ML_Module/models/Tag_predictor.h5')
+
 
 # Index
 @app.route('/')
@@ -152,9 +233,11 @@ def AddQuestionNext():
 		tags_list = ['tag1', 'tag2']
 		userId = session['userId']
 		question_id = post_question(title, body, tags_list, userId)
+		results = searchresults(title, 8)
+		tags_list = list(predict_tags(title))
+		return jsonify({'results':results})
 		return render_template('post_question_confirmation.html', id=question_id)
 			
-
 	elif request.method == "POST":
 		title = request.form['title']
 		body = str(request.form['body'])
@@ -162,8 +245,10 @@ def AddQuestionNext():
 		userId = session['userId']
 		question_id = post_question(title, body, tags_list, userId)
 		# flash("Question Posted successfully.", "success")
+		results = searchresults(title, 5)
+		tags_list = list(predict_tags(title))
+		return jsonify({'results':results})
 		return render_template('post_question_confirmation.html',id=question_id)
-	
 
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
