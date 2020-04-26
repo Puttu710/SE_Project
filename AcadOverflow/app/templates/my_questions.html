@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+  <div class="container">
+    {{ pagination.links }}
+    <div class="content">
+      <a name="datasource_jsonp"></a>
+      <h4>My Questions</h4>
+      <hr>
+      <div class="data-container" style="min-height: 175px" id="demo1">
+        <ul class = 'pagination'>
+          {% for question in questions %}
+            <div class = 'card-panel'>
+              <li>
+                <a href = '/question_details?question_id={{question.Id}}'>{{question.Title}}</a>
+              </li>
+            </div>
+          {% endfor %}
+        </ul>
+      </div>
+  </div>
+{{ pagination.links }}
+{% endblock %}

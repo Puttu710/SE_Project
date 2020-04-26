@@ -4,26 +4,42 @@
 <div class = 'container'>
     <div>
         <h4>{{question.Title}}</h4>
-        {{question.Body}}<br><br>
+        {{question.Body}}<br>
+        <table style = 'width: 100px;'>
+            <tr>
+                <td style = 'width: 50px;'><h4 style = 'display:inline'>{{question.VoteCount}}</h4></td>
+                <td><button type = "button" class="btn-floating">
+                    <i class="material-icons">thumb_up</i>
+                </button></td>
+                <td><button type = "button" class="btn-floating">
+                    <i class="material-icons">thumb_down</i>
+                </button></td><br>
+            </tr>
+        </table>
         <span class="grey-text">
             Posted 
             by 
             <span class="blue-text">
                 {{question.Question_User.EmailId}}
             </span>
-            on {{question.created_at}}
+            on {{question.created_at}}<br>
         </span>
-        {{question.VoteCount}}
-        <button type = "button" class="btn-floating">
-            <i class="material-icons">thumb_up</i>
-        </button>
-        <button type = "button" class="btn-floating">
-            <i class="material-icons">thumb_down</i>
-        </button><br>
     </div>
         <h5>Answers</h5>
     {% for answer in question.Question_Answers %}
     <div class = 'card-panel'>
+        {{answer.Body}}
+        <table style = 'width: 100px;'>
+            <tr>
+                <td style = 'width: 50px;'><h4 style = 'display:inline'>{{question.VoteCount}}</h4></td>
+                <td><button type = "button" class="btn-floating">
+                    <i class="material-icons">thumb_up</i>
+                </button></td>
+                <td><button type = "button" class="btn-floating">
+                    <i class="material-icons">thumb_down</i>
+                </button></td><br>
+            </tr>
+        </table>
         <span class="grey-text">
             Posted
             by 
@@ -31,15 +47,9 @@
                 {{answer.Answer_User.EmailId}}
             </span>
             on {{answer.created_at}}
-        </span>
-        {{answer.VoteCount}}
-        <button type = "button" class="btn-floating">
-            <i class="material-icons">thumb_up</i>
-        </button>
-        <button type = "button" class="btn-floating">
-            <i class="material-icons">thumb_down</i>
-        </button><br>
-        {{answer.Body}}<br>
+        </span><br>
+        
+        
     </div>
     {% endfor %}
     <div class = "well bs-component">

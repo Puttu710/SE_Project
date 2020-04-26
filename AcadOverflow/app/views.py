@@ -10,6 +10,7 @@ from passlib.hash import sha256_crypt
 from functools import wraps
 from datetime import datetime
 from operator import attrgetter
+from flask_paginate import Pagination, get_page_args
 import sys
 import re
 
@@ -335,3 +336,12 @@ def post_new_question():
 	elif request.method == 'GET':
 		flash('Something went wrong!! Please try again', 'danger')
 	return "Something went wrong...!!!"
+
+@app.route('/my_questions')
+def my_questions():
+	users = questions_by_user(session['userId'])
+	page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+	total = len(users)
+	pagination_users = users[offset: offset + per_page]
+	pagination = Pagination(page=page, per_page=per_page, total=total)
+	return render_template('my_questions.html', questions=pagination_users, page=page, per_page=per_page, pagination=pagination)
