@@ -41,6 +41,8 @@ def searchresults(search_string, num_results):
         temp = {
             'title': str(data.original_title[i]),
             'url': str(data.question_url[i]),
+            'id': str(i),
+            'answer': str(data.answers_content[i]),            
             'tags': str(data.tags[i]),
             'similarity_score': str(j)[:5],
             'votes': str(data.overall_scores[i]),
