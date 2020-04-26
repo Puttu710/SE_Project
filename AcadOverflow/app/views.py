@@ -241,8 +241,14 @@ def AddQuestionNext():
 		body = str(request.form['body'])
 	search_results = searchresults(title, 5)
 	tags_list = list(predict_tags(title))
+	clean = re.compile('<.*?>')
+	body = re.sub(clean, '', body)
+	page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+	total = len(search_results)
+	p_questions = search_results[offset: offset + per_page]
+	pagination = Pagination(page=page, per_page=per_page, total=total)
+	return render_template('post_question_confirmation.html', similar_questions=p_questions, page=page, per_page=per_page, pagination=pagination, title = title, body = body, tags_list = tags)
 
-	return render_template('post_question_confirmation.html', title = title, body = body, tags_list = tags_list, similar_questions = search_results)
 
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
