@@ -246,14 +246,21 @@ def AddQuestionNext():
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
 	# To find out the method of request, use 'request.method'
+	id_list = [75, 76, 77, 78, 79, 80]
+	questions = []
+	for item in id_list:
+		question = query_question_for_list(item)
+		questions.append(question)
+	print(questions)
 	if request.method == "GET":
-		print(request.args)
-		question = request.args.get("question")
-		print(question)				
+		title = request.args.get("question")
+		
 	elif request.method == "POST":
-		question = request.form['question']
-		return "Question Searching: %s" % question
-	return "Question searched successfully"
+		title = request.form['question']
+	# tags_list = ['tag1', 'tag2']
+	print(title)
+	# print(body)
+	return render_template('search_questions.html',title = title, id_list = questions)
 
 # Dummy Page to be deleted once the question link works
 @app.route('/dummy')
