@@ -370,3 +370,28 @@ def my_questions():
 	pagination_users = users[offset: offset + per_page]
 	pagination = Pagination(page=page, per_page=per_page, total=total)
 	return render_template('my_questions.html', questions=pagination_users, page=page, per_page=per_page, pagination=pagination)
+
+
+@app.route('/voting_q_down/<id>')
+def voting_q_down(id):
+	id = int(id)
+	csv_downvote_question(id)
+	return redirect(url_for('question_details', question_id = id))
+
+@app.route('/voting_q_up/<id>')
+def voting_q_up(id):
+	id = int(id)
+	csv_upvote_question(id)
+	return redirect(url_for('question_details', question_id = id))
+
+@app.route('/voting_a_down/<id>')
+def voting_a_down(id):
+	id = int(id)
+	csv_downvote_answer(id)
+	return redirect(url_for('question_details', question_id = id))
+
+@app.route('/voting_a_up/<id>')
+def voting_a_up(id):
+	id = int(id)
+	csv_upvote_answer(id)
+	return redirect(url_for('question_details', question_id = id))
