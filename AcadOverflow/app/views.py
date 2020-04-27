@@ -35,8 +35,6 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from search import searchresults
 from utils import preprocess_text
 
-EN = spacy.load('en_core_web_sm')
-
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
 sys.path.append("./app/session_data")
@@ -256,22 +254,39 @@ def AddQuestionNext():
 
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
-	# To find out the method of request, use 'request.method'
-	id_list = [75, 76, 77, 78, 79, 80]
-	questions = []
-	for item in id_list:
-		question = csv_query_question_for_list(item)
-		questions.append(question)
-	print(questions)
-	if request.method == "GET":
-		title = request.args.get("question")
-		
-	elif request.method == "POST":
-		title = request.form['question']
-	# tags_list = ['tag1', 'tag2']
-	print(title)
-	# print(body)
-	return render_template('search_questions.html',title = title, id_list = questions)
+        '''
+        # To find out the method of request, use 'request.method'
+        id_list = [75, 76, 77, 78, 79, 80]
+        questions = []
+        for item in id_list:
+                question = csv_query_question_for_list(item)
+                questions.append(question)
+        print(questions)
+        if request.method == "GET":
+                title = request.args.get("question")
+                
+        elif request.method == "POST":
+                title = request.form['question']
+        # tags_list = ['tag1', 'tag2']
+        print(title)
+        # print(body)
+        '''
+        # To find out the method of request, use 'request.method'
+        if request.method == "GET":
+                title = request.args.get("title")
+               # body = request.args.get("body")
+        elif request.method == "POST":
+                title = request.form['title']
+                #body = str(request.form['body'])
+        search_results = searchresults(title, 5)
+        tags_list = list(predict_tags(title))
+        #clean = re.compile('<.*?>')
+        #body = re.sub(clean, '', body)
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        total = len(search_results)
+        p_questions = search_results[offset: offset + per_page]
+        pagination = Pagination(page=page, per_page=per_page, total=total)
+        return render_template('search_questions.html',title = title, id_list = search_results)
 
 # Dummy Page to be deleted once the question link works
 @app.route('/dummy')
