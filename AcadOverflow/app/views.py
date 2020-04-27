@@ -14,6 +14,7 @@ from flask_paginate import Pagination, get_page_args
 import sys
 import re
 
+sys.path.insert(0, "./app")
 sys.path.insert(0, "./")
 
 import tensorflow as tf
@@ -38,15 +39,18 @@ EN = spacy.load('en_core_web_sm')
 
 sys.path.append("./app")
 sys.path.append("./app/gql_client")
+sys.path.append("./app/session_data")
 
+from session_data.data_handling import get_preprocessed_data
+from session_data.data_handling import csv_register_user
+from session_data.data_handling import csv_user_exists
+from session_data.data_handling import csv_get_login_details
+from session_data.data_handling import csv_post_question
+from session_data.data_handling import csv_query_question_for_list
+from session_data.data_handling import csv_query_question_for_page
+from session_data.data_handling import csv_post_answer
+from session_data.data_handling import csv_query_user_questions
 
-from gql_client.register_users import register_user
-from gql_client.user_exists import user_exists
-from gql_client.get_login_details import get_login_details
-from gql_client.query_question_for_list import query_question_for_list
-from gql_client.post_question import post_question
-from gql_client.query_question_for_page import query_question_for_page
-from gql_client.post_answer import post_answer
 
 # Custom loss function to handle multilabel classification task
 def multitask_loss(y_true, y_pred):
@@ -99,7 +103,7 @@ def predict_tags(text):
 	tags = tag_encoder.inverse_transform(np.array([prediction]))
 	return tags
 
-data = pd.read_csv('../ML_Module/models/Preprocessed_data.csv')
+data = get_preprocessed_data()
 tag_encoder = load_tag_encoder(data)
 
 MAX_SEQUENCE_LENGTH = 300
@@ -149,7 +153,7 @@ def register():
 	if request.method == 'POST':
 		emailId = request.form['emailId']
 
-		if user_exists(emailId):
+		if csv_user_exists(emailId):
 			flash ('Already registered with emailId: {}!!'.format(emailId), 'danger')
 			return render_template('register.html')
 
@@ -165,7 +169,7 @@ def register():
 			return redirect(url_for('register'))
 
 		try:
-			register_user(emailId, fname, lname, password)
+			csv_register_user(emailId, fname, lname, password)
 			flash('{} registered!! Please log in'.format(emailId), 'success')
 			return redirect(url_for('login'))
 		except Exception as e:
@@ -188,7 +192,7 @@ def login():
 	emailId = request.form['emailId']
 	password_candidate = request.form['password']
 	
-	user = get_login_details(emailId)
+	user = csv_get_login_details(emailId)
 	if not user:
 		error = 'EmailId: {} not registered!!'.format(emailId)
 		return render_template('login.html', error=error)
@@ -256,7 +260,7 @@ def SearchQuestionNext():
 	id_list = [75, 76, 77, 78, 79, 80]
 	questions = []
 	for item in id_list:
-		question = query_question_for_list(item)
+		question = csv_query_question_for_list(item)
 		questions.append(question)
 	print(questions)
 	if request.method == "GET":
@@ -285,7 +289,7 @@ def question_details():
 	print(id)
 	try:
 		print('trying to fetch the question...')
-		question = query_question_for_page(id)
+		question = csv_query_question_for_page(id)
 		if question is None:
 			flash('No such question found', 'warning')
 			return render_template('dummy.html', question = question)
@@ -311,7 +315,7 @@ def post_new_answer():
 		print(userId)
 		try:
 			print('trying...')
-			post_answer(qId, aBody, userId)
+			csv_post_answer(qId, aBody, userId)
 			print('Answer added to the database')
 			flash('New answer added', 'success')
 			return redirect(url_for('question_details', question_id = qId))
@@ -333,7 +337,7 @@ def post_new_question():
 		userId = session['userId']
 		try:
 			print('trying...')
-			post_question(qtitle, qbody, tags_list, userId)
+			csv_post_question(qtitle, qbody, tags_list, userId)
 			flash('New Question added', 'success')
 			return redirect(url_for('home'))
 		except Exception as e:
@@ -345,7 +349,7 @@ def post_new_question():
 
 @app.route('/my_questions')
 def my_questions():
-	users = questions_by_user(session['userId'])
+	users = csv_query_user_questions(session['userId'])
 	page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
 	total = len(users)
 	pagination_users = users[offset: offset + per_page]
