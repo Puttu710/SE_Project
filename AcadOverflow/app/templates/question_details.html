@@ -8,10 +8,10 @@
         <table style = 'width: 100px;'>
             <tr>
                 <td style = 'width: 50px;'><h4 style = 'display:inline'>{{question.VoteCount}}</h4></td>
-                <td><button type = "button" class="btn-floating">
+                <td><button type = "button" class="btn-floating" id = {{question.Id}} onclick="like_que(this.id)" value = 'Upvote'>
                     <i class="material-icons">thumb_up</i>
                 </button></td>
-                <td><button type = "button" class="btn-floating">
+                <td><button type = "button" class="btn-floating" id = {{question.Id}} onclick="dislike_que(this.id)" value="Downvote">
                     <i class="material-icons">thumb_down</i>
                 </button></td><br>
             </tr>
@@ -32,10 +32,10 @@
         <table style = 'width: 100px;'>
             <tr>
                 <td style = 'width: 50px;'><h4 style = 'display:inline'>{{question.VoteCount}}</h4></td>
-                <td><button type = "button" class="btn-floating">
+                <td><button type = "button" class="btn-floating" id = {{answer.Id}} onclick="like_ans(this.id)" value = 'Upvote'>
                     <i class="material-icons">thumb_up</i>
                 </button></td>
-                <td><button type = "button" class="btn-floating">
+                <td><button type = "button" class="btn-floating" id = {{answer.Id}} onclick="dislike_ans(this.id)" value="Downvote">
                     <i class="material-icons">thumb_down</i>
                 </button></td><br>
             </tr>
@@ -76,4 +76,5 @@
     </div>
       
 </div>
+<button id="{{ question.Id }}" class="follow info" onclick="like_pub(this.id)" value="Like">Like</button>
 {% endblock %}

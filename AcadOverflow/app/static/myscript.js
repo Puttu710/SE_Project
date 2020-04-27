@@ -245,30 +245,90 @@ function follow_professor(id) {
     }
 }
 
-function like_pub(id) {
+function dislike_que(id) {
     var btn = document.getElementById(id);
-    if (btn.value == "Like") {
+    if (btn.value == "Downvote") {
         $.ajax({
-            url: '/like_pub/' + id,
-            success: function (resp) {
-                var temp = "likes_" + id;
-                document.getElementById(temp).innerHTML = resp + ' Likes';
-            }
+            url: '/voting_q_down/' + id
         });
-        btn.value = 'Liked';
-        btn.innerHTML = 'Liked';
+        btn.value = 'Downvoted';
+        btn.innerHTML = '<i class="material-icons" style = "background-color:darkslategray">thumb_down</i>';
     }
     else {
         $.ajax({
-            url: '/unlike_pub/' + id,
+            url: '/voting_q_up/' + id,
             success: function (resp) {
                 var temp = "likes_" + id;
                 document.getElementById(temp).innerHTML = resp + ' Likes';
             }
         });
 
-        btn.value = 'Like';
-        btn.innerHTML = 'Like';
+        btn.value = 'Downvote';
+        btn.innerHTML = '<i class="material-icons">thumb_down</i>';
+
+    }
+}
+
+function like_que(id) {
+    var btn = document.getElementById(id);
+    if (btn.value == "Upvote") {
+        $.ajax({
+            url: '/voting_q_up/' + id
+        });
+        btn.value = 'Upvoted';
+        btn.innerHTML = '<i class="material-icons" style = "background-color:darkslategray">thumb_up</i>';
+    }
+    else {
+        $.ajax({
+            url: '/voting_q_down/' + id,
+        });
+
+        btn.value = 'Upvote';
+        btn.innerHTML = '<i class="material-icons">thumb_up</i>';
+
+    }
+}
+
+function dislike_ans(id) {
+    var btn = document.getElementById(id);
+    if (btn.value == "Downvote") {
+        $.ajax({
+            url: '/voting_a_down/' + id
+        });
+        btn.value = 'Downvoted';
+        btn.innerHTML = '<i class="material-icons" style = "background-color:darkslategray">thumb_down</i>';
+    }
+    else {
+        $.ajax({
+            url: '/voting_a_up/' + id,
+            success: function (resp) {
+                var temp = "likes_" + id;
+                document.getElementById(temp).innerHTML = resp + ' Likes';
+            }
+        });
+
+        btn.value = 'Downvote';
+        btn.innerHTML = '<i class="material-icons">thumb_down</i>';
+
+    }
+}
+
+function like_ans(id) {
+    var btn = document.getElementById(id);
+    if (btn.value == "Upvote") {
+        $.ajax({
+            url: '/voting_q_up/' + id
+        });
+        btn.value = 'Upvoted';
+        btn.innerHTML = '<i class="material-icons" style = "background-color:darkslategray">thumb_up</i>';
+    }
+    else {
+        $.ajax({
+            url: '/voting_q_down/' + id,
+        });
+
+        btn.value = 'Upvote';
+        btn.innerHTML = '<i class="material-icons">thumb_up</i>';
 
     }
 }
