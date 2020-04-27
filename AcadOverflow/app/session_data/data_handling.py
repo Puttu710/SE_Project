@@ -88,7 +88,7 @@ def csv_query_user_questions(userId):
             'Id': q_id,
             'Title': question.original_title,
         }
-        User_Questions.append(question)
+        User_Questions.append(question_details)
     return User_Questions
 
 

@@ -27,7 +27,9 @@ import keras.losses
 import pickle
 import keras.backend as K
 import utils
+import gensim
 
+from sklearn.metrics.pairwise import cosine_similarity
 from keras.models import load_model
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
@@ -249,44 +251,44 @@ def AddQuestionNext():
 	total = len(search_results)
 	p_questions = search_results[offset: offset + per_page]
 	pagination = Pagination(page=page, per_page=per_page, total=total)
-	return render_template('post_question_confirmation.html', similar_questions=p_questions, page=page, per_page=per_page, pagination=pagination, title = title, body = body, tags_list = tags)
+	return render_template('post_question_confirmation.html', similar_questions=p_questions, page=page, per_page=per_page, pagination=pagination, title = title, body = body, tags_list = tags_list)
 
 
 @app.route('/SearchQuestionNext',methods=['GET','POST'])
 def SearchQuestionNext():
-        '''
+	'''
+	# To find out the method of request, use 'request.method'
+	id_list = [75, 76, 77, 78, 79, 80]
+	questions = []
+	for item in id_list:
+		question = csv_query_question_for_list(item)
+		questions.append(question)
+	print(questions)
+	if request.method == "GET":
+		title = request.args.get("question")
+		
+	elif request.method == "POST":
+		title = request.form['question']
+	# tags_list = ['tag1', 'tag2']
+	print(title)
+	# print(body)
+	'''
         # To find out the method of request, use 'request.method'
-        id_list = [75, 76, 77, 78, 79, 80]
-        questions = []
-        for item in id_list:
-                question = csv_query_question_for_list(item)
-                questions.append(question)
-        print(questions)
-        if request.method == "GET":
-                title = request.args.get("question")
-                
-        elif request.method == "POST":
-                title = request.form['question']
-        # tags_list = ['tag1', 'tag2']
-        print(title)
-        # print(body)
-        '''
-        # To find out the method of request, use 'request.method'
-        if request.method == "GET":
-                title = request.args.get("title")
+	if request.method == "GET":
+		title = request.args.get("question")
                # body = request.args.get("body")
-        elif request.method == "POST":
-                title = request.form['title']
+	elif request.method == "POST":
+		title = request.form['question']
                 #body = str(request.form['body'])
-        search_results = searchresults(title, 5)
-        tags_list = list(predict_tags(title))
+	search_results = searchresults(title, 5)
+	tags_list = list(predict_tags(title))
         #clean = re.compile('<.*?>')
         #body = re.sub(clean, '', body)
-        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-        total = len(search_results)
-        p_questions = search_results[offset: offset + per_page]
-        pagination = Pagination(page=page, per_page=per_page, total=total)
-        return render_template('search_questions.html',title = title, id_list = search_results)
+	page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+	total = len(search_results)
+	p_questions = search_results[offset: offset + per_page]
+	pagination = Pagination(page=page, per_page=per_page, total=total)
+	return render_template('search_questions.html',title = title, id_list = search_results)
 
 # Dummy Page to be deleted once the question link works
 @app.route('/dummy')
