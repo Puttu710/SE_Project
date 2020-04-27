@@ -1,0 +1,7 @@
+Id,EmailId,FirstName,LastName,Password,created_at
+0,bhavi.dhingra@students.iiit.ac.in,Bhavi,Dhingra,$5$rounds=535000$t86A.eehQT/SuZY9$wr.6rdIegbfc5CrvO//jnxQ/sMFi3lnY3yOXbrPXpp3,2020-04-20T14:56:54.369396+00:00
+1,aditi.shrivastava@students.iiit.ac.in,Aditi,Shrivastava,$5$rounds=535000$pcGuuN6dm.s/Qvwp$alULpR2I5fvjg82l0AbSvzd2S50XgG9jWuPjWg1/1Q4,2020-04-20T12:06:17.710158+00:00
+2,nikita.rungta@research.iiit.ac.in,Nikita,Rungta,$5$rounds=535000$QtJy4QtlffbPMVqq$.pqv19WtH2Y2lhEA813mCIdU1bEVSIAomR86E1eNEe6,2020-04-26T06:50:11.840017+00:00
+3,kajal.sanklecha@research.iiit.ac.in,Kajal,Sanklecha,$5$rounds=535000$M.Ec4hvp6GbXtMjv$xdw4yPuxX1aP9A0vQpmHVIOS8bOx8QXlQbeTG6rX1QC,2020-04-24T13:00:28.063348+00:00
+4,surbhi.sharma@students.iiit.ac.in,Surbhi,Sharma,$5$rounds=535000$mEEaR4PzlKsdUoPD$dAJIu1EgGIrQ9NwRHnXTfiiu49HUcMiUkXsjwdzaMw7,2020-04-22T11:50:33.093224+00:00
+5,samyak.agrawal@research.iiit.ac.in,Samyak,Agrawal,$5$rounds=535000$lmSGtC5rJMAXhxuP$5QzJAZI90LRP/wG5r5XYfAO1A3S0EGU.7oA4y9vQNbD,2020-04-24T13:16:08.74876+00:00

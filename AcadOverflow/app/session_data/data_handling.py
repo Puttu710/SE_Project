@@ -31,13 +31,15 @@ def csv_user_exists(emailId):
 def csv_get_login_details(emailId):
     global users_df
     user_index = (users_df.loc[users_df['EmailId'] == emailId]).index
-    user = users_df.iloc[user_index]
+    if len(user_index) == 0:
+        return None
+    user = users_df.iloc[user_index[0]]
     login_details = {
-        'EmailId': user.EmailId[0],
-        'FirstName': user.FirstName[0],
-        'LastName': user.LastName[0],
-        'Password': user.Password[0],
-        'Id': user.Id[0]
+        'EmailId': user.EmailId,
+        'FirstName': user.FirstName,
+        'LastName': user.LastName,
+        'Password': user.Password,
+        'Id': user.Id
     }
     return login_details
 
